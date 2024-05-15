@@ -1,0 +1,11 @@
+@import "apps.scss";
+footer.footer {
+  padding: $spacer $spacer*0.875;
+  direction: ltr;
+  background: white !important;
+
+  ul {
+    margin-bottom: 0;
+  }
+
+}
