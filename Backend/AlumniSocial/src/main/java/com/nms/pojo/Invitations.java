@@ -5,21 +5,24 @@
 package com.nms.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -33,7 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
-    @NamedQuery(name = "Invitations.findByInvitationID", query = "SELECT i FROM Invitations i WHERE i.invitationID = :invitationID")})
+    @NamedQuery(name = "Invitations.findByInvitationID", query = "SELECT i FROM Invitations i WHERE i.invitationID = :invitationID"),
+    @NamedQuery(name = "Invitations.findByCreatedAt", query = "SELECT i FROM Invitations i WHERE i.createdAt = :createdAt"),
+    @NamedQuery(name = "Invitations.findByUpdatedAt", query = "SELECT i FROM Invitations i WHERE i.updatedAt = :updatedAt")})
 public class Invitations implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,11 +51,14 @@ public class Invitations implements Serializable {
     @Size(max = 65535)
     @Column(name = "EventDetails")
     private String eventDetails;
-    @JoinTable(name = "invitationrecipients", joinColumns = {
-        @JoinColumn(name = "InvitationID", referencedColumnName = "InvitationID")}, inverseJoinColumns = {
-        @JoinColumn(name = "RecipientID", referencedColumnName = "UserID")})
-    @ManyToMany
-    private Set<Users> usersSet;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    @OneToMany( mappedBy = "invitations",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Invitationrecipients> invitationrecipientsSet;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID")
     @ManyToOne
     private Posts postID;
@@ -78,13 +86,29 @@ public class Invitations implements Serializable {
         this.eventDetails = eventDetails;
     }
 
-    @XmlTransient
-    public Set<Users> getUsersSet() {
-        return usersSet;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUsersSet(Set<Users> usersSet) {
-        this.usersSet = usersSet;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @XmlTransient
+    public Set<Invitationrecipients> getInvitationrecipientsSet() {
+        return invitationrecipientsSet;
+    }
+
+    public void setInvitationrecipientsSet(Set<Invitationrecipients> invitationrecipientsSet) {
+        this.invitationrecipientsSet = invitationrecipientsSet;
     }
 
     public Posts getPostID() {

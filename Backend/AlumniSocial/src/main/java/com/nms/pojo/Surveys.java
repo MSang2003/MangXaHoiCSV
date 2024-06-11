@@ -5,8 +5,10 @@
 package com.nms.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,7 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Surveys.findAll", query = "SELECT s FROM Surveys s"),
-    @NamedQuery(name = "Surveys.findBySurveyID", query = "SELECT s FROM Surveys s WHERE s.surveyID = :surveyID")})
+    @NamedQuery(name = "Surveys.findBySurveyID", query = "SELECT s FROM Surveys s WHERE s.surveyID = :surveyID"),
+    @NamedQuery(name = "Surveys.findByCreatedAt", query = "SELECT s FROM Surveys s WHERE s.createdAt = :createdAt"),
+    @NamedQuery(name = "Surveys.findByUpdatedAt", query = "SELECT s FROM Surveys s WHERE s.updatedAt = :updatedAt")})
 public class Surveys implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,10 +51,16 @@ public class Surveys implements Serializable {
     @Size(max = 65535)
     @Column(name = "Question")
     private String question;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID")
     @ManyToOne
     private Posts postID;
-    @OneToMany(mappedBy = "surveyID")
+    @OneToMany(mappedBy = "surveyID",cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Surveyresponses> surveyresponsesSet;
 
     public Surveys() {
@@ -72,6 +84,22 @@ public class Surveys implements Serializable {
 
     public void setQuestion(String question) {
         this.question = question;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Posts getPostID() {

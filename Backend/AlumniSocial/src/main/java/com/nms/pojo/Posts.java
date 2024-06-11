@@ -4,7 +4,9 @@
  */
 package com.nms.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +22,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -35,7 +39,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Posts.findAll", query = "SELECT p FROM Posts p"),
     @NamedQuery(name = "Posts.findByPostID", query = "SELECT p FROM Posts p WHERE p.postID = :postID"),
     @NamedQuery(name = "Posts.findByPostType", query = "SELECT p FROM Posts p WHERE p.postType = :postType"),
-    @NamedQuery(name = "Posts.findByIsCommentLocked", query = "SELECT p FROM Posts p WHERE p.isCommentLocked = :isCommentLocked")})
+    @NamedQuery(name = "Posts.findByIsCommentLocked", query = "SELECT p FROM Posts p WHERE p.isCommentLocked = :isCommentLocked"),
+    @NamedQuery(name = "Posts.findByCreatedAt", query = "SELECT p FROM Posts p WHERE p.createdAt = :createdAt"),
+    @NamedQuery(name = "Posts.findByUpdatedAt", query = "SELECT p FROM Posts p WHERE p.updatedAt = :updatedAt")})
 public class Posts implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,14 +59,25 @@ public class Posts implements Serializable {
     private String postType;
     @Column(name = "IsCommentLocked")
     private Boolean isCommentLocked;
-    @OneToMany(mappedBy = "postID")
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    @OneToMany(mappedBy = "postID", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Comments> commentsSet;
-    @OneToMany(mappedBy = "postID")
+    @OneToMany(mappedBy = "postID", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Invitations> invitationsSet;
-    @OneToMany(mappedBy = "postID")
+    @OneToMany(mappedBy = "postID", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Surveys> surveysSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts",orphanRemoval = true)
+    @JsonIgnore
     private Set<Reactions> reactionsSet;
+    @JsonIgnore
     @JoinColumn(name = "UserID", referencedColumnName = "UserID")
     @ManyToOne
     private Users userID;
@@ -102,6 +119,22 @@ public class Posts implements Serializable {
 
     public void setIsCommentLocked(Boolean isCommentLocked) {
         this.isCommentLocked = isCommentLocked;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @XmlTransient

@@ -4,7 +4,6 @@
  */
 package com.nms.repositories;
 
-
 import com.nms.pojo.Users;
 import java.util.List;
 
@@ -13,7 +12,19 @@ import java.util.List;
  * @author Admin
  */
 public interface UsersRepository {
-    
+
     List<Users> getUsers();
-    
+
+    void addUser(Users user);
+
+    void updateUser(Users user);
+
+    Users getUserById(int id);
+
+    void deleteUserById(int id);
+
+    Users getUserByUsername(String username);
+
+    boolean authUser(String username, String password);
+
 }

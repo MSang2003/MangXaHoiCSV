@@ -13,11 +13,14 @@
         <title>
             <tiles:insertAttribute name="title" />
         </title>
-        <link href="${pageContext.request.contextPath}/css/sidebar.css" rel="stylesheet" type="text/css"/>
-                <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet" type="text/css"/>
-                                <link href="${pageContext.request.contextPath}/css/content.css" rel="stylesheet" type="text/css"/>
-                                                                <link href="${pageContext.request.contextPath}/css/footer.css" rel="stylesheet" type="text/css"/>
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+        <link href="${pageContext.request.contextPath}/resources/css/sidebar.css" rel="stylesheet" type="text/css"/>
+        <link href="${pageContext.request.contextPath}/resources/css/navbar.css" rel="stylesheet" type="text/css"/>
+        <link href="${pageContext.request.contextPath}/resources/css/content.css" rel="stylesheet" type="text/css"/>
+        <link href="${pageContext.request.contextPath}/resources/css/footer.css" rel="stylesheet" type="text/css"/>
+        <link href="${pageContext.request.contextPath}/resources/css/userStyle.css" rel="stylesheet" type="text/css"/>
 
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">

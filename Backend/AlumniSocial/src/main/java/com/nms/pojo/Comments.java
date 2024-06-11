@@ -4,7 +4,10 @@
  */
 package com.nms.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -29,7 +34,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Comments.findAll", query = "SELECT c FROM Comments c"),
-    @NamedQuery(name = "Comments.findByCommentID", query = "SELECT c FROM Comments c WHERE c.commentID = :commentID")})
+    @NamedQuery(name = "Comments.findByCommentID", query = "SELECT c FROM Comments c WHERE c.commentID = :commentID"),
+    @NamedQuery(name = "Comments.findByCreatedAt", query = "SELECT c FROM Comments c WHERE c.createdAt = :createdAt"),
+    @NamedQuery(name = "Comments.findByUpdatedAt", query = "SELECT c FROM Comments c WHERE c.updatedAt = :updatedAt"),
+    @NamedQuery(name = "Comments.findByPostID", query = "SELECT c FROM Comments c WHERE c.postID.postID = :postID ORDER BY c.createdAt DESC")})
+
 public class Comments implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,11 +51,19 @@ public class Comments implements Serializable {
     @Size(max = 65535)
     @Column(name = "Content")
     private String content;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID")
     @ManyToOne
+    @JsonIgnore
     private Posts postID;
     @JoinColumn(name = "UserID", referencedColumnName = "UserID")
     @ManyToOne
+    @JsonIgnore
     private Users userID;
 
     public Comments() {
@@ -64,12 +81,31 @@ public class Comments implements Serializable {
         this.commentID = commentID;
     }
 
+//    @JsonProperty("content")
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+//    @JsonProperty("createdAt")
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+//    @JsonProperty("updatedAt")
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Posts getPostID() {
@@ -112,5 +148,5 @@ public class Comments implements Serializable {
     public String toString() {
         return "com.nms.pojo.Comments[ commentID=" + commentID + " ]";
     }
-    
+
 }

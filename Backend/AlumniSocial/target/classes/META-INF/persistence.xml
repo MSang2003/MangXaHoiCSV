@@ -18,6 +18,16 @@
     <class>com.nms.pojo.Posts</class>
     <class>com.nms.pojo.Users</class>
     <class>com.nms.pojo.Surveyresponses</class>
+    <class>com.nms.pojo.SaleOrder</class>
+    <class>com.nms.pojo.Tag</class>
+    <class>com.nms.pojo.ProdTag</class>
+    <class>com.nms.pojo.Product</class>
+    <class>com.nms.pojo.Category</class>
+    <class>com.nms.pojo.Comment</class>
+    <class>com.nms.pojo.OrderDetail</class>
+    <class>com.nms.pojo.User</class>
+    <class>com.nms.pojo.Groupmembers</class>
+    <class>com.nms.pojo.Invitationrecipients</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saledb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>

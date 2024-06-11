@@ -5,19 +5,21 @@
 package com.nms.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,7 +34,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Usergroups.findAll", query = "SELECT u FROM Usergroups u"),
     @NamedQuery(name = "Usergroups.findByGroupID", query = "SELECT u FROM Usergroups u WHERE u.groupID = :groupID"),
-    @NamedQuery(name = "Usergroups.findByGroupName", query = "SELECT u FROM Usergroups u WHERE u.groupName = :groupName")})
+    @NamedQuery(name = "Usergroups.findByGroupName", query = "SELECT u FROM Usergroups u WHERE u.groupName = :groupName"),
+    @NamedQuery(name = "Usergroups.findByCreatedAt", query = "SELECT u FROM Usergroups u WHERE u.createdAt = :createdAt"),
+    @NamedQuery(name = "Usergroups.findByUpdatedAt", query = "SELECT u FROM Usergroups u WHERE u.updatedAt = :updatedAt")})
 public class Usergroups implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,11 +48,14 @@ public class Usergroups implements Serializable {
     @Size(max = 255)
     @Column(name = "GroupName")
     private String groupName;
-    @JoinTable(name = "groupmembers", joinColumns = {
-        @JoinColumn(name = "GroupID", referencedColumnName = "GroupID")}, inverseJoinColumns = {
-        @JoinColumn(name = "UserID", referencedColumnName = "UserID")})
-    @ManyToMany
-    private Set<Users> usersSet;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+    @Column(name = "UpdatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
+    @OneToMany(mappedBy = "usergroups", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Groupmembers> groupmembersSet;
 
     public Usergroups() {
     }
@@ -73,13 +80,29 @@ public class Usergroups implements Serializable {
         this.groupName = groupName;
     }
 
-    @XmlTransient
-    public Set<Users> getUsersSet() {
-        return usersSet;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUsersSet(Set<Users> usersSet) {
-        this.usersSet = usersSet;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @XmlTransient
+    public Set<Groupmembers> getGroupmembersSet() {
+        return groupmembersSet;
+    }
+
+    public void setGroupmembersSet(Set<Groupmembers> groupmembersSet) {
+        this.groupmembersSet = groupmembersSet;
     }
 
     @Override
@@ -106,5 +129,5 @@ public class Usergroups implements Serializable {
     public String toString() {
         return "com.nms.pojo.Usergroups[ groupID=" + groupID + " ]";
     }
-    
+
 }

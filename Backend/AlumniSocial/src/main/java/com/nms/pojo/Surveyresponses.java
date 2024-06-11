@@ -5,6 +5,7 @@
 package com.nms.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -29,7 +32,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Surveyresponses.findAll", query = "SELECT s FROM Surveyresponses s"),
-    @NamedQuery(name = "Surveyresponses.findByResponseID", query = "SELECT s FROM Surveyresponses s WHERE s.responseID = :responseID")})
+    @NamedQuery(name = "Surveyresponses.findByResponseID", query = "SELECT s FROM Surveyresponses s WHERE s.responseID = :responseID"),
+    @NamedQuery(name = "Surveyresponses.findByCreatedAt", query = "SELECT s FROM Surveyresponses s WHERE s.createdAt = :createdAt")})
 public class Surveyresponses implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +46,9 @@ public class Surveyresponses implements Serializable {
     @Size(max = 65535)
     @Column(name = "Answer")
     private String answer;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
     @JoinColumn(name = "SurveyID", referencedColumnName = "SurveyID")
     @ManyToOne
     private Surveys surveyID;
@@ -70,6 +77,14 @@ public class Surveyresponses implements Serializable {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Surveys getSurveyID() {

@@ -14,4 +14,17 @@
         <put-attribute name="title" value="Trang chủ quản trị" />
         <put-attribute name="content" value="/WEB-INF/pages/index.jsp" />
     </definition>
+    <definition name="users" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị người dùng" />
+        <put-attribute name="content" value="/WEB-INF/pages/users.jsp" />
+    </definition>
+    <definition name="userEditor" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị người dùng" />
+        <put-attribute name="content" value="/WEB-INF/pages/userEditor.jsp" />
+    </definition>
+    
+    <definition name="post" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị bài đăng" />
+        <put-attribute name="content" value="/WEB-INF/pages/post.jsp" />
+    </definition>
 </tiles-definitions>

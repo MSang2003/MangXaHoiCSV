@@ -4,7 +4,9 @@
  */
 package com.nms.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -27,7 +31,11 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Reactions.findAll", query = "SELECT r FROM Reactions r"),
     @NamedQuery(name = "Reactions.findByUserID", query = "SELECT r FROM Reactions r WHERE r.reactionsPK.userID = :userID"),
     @NamedQuery(name = "Reactions.findByPostID", query = "SELECT r FROM Reactions r WHERE r.reactionsPK.postID = :postID"),
-    @NamedQuery(name = "Reactions.findByReactionType", query = "SELECT r FROM Reactions r WHERE r.reactionType = :reactionType")})
+    @NamedQuery(name = "Reactions.findByUserIDAndPostID", query = "SELECT r FROM Reactions r WHERE r.reactionsPK.userID = :userID AND r.reactionsPK.postID = :postID"),
+    @NamedQuery(name = "Reactions.findByReactionType", query = "SELECT r FROM Reactions r WHERE r.reactionType = :reactionType"),
+    @NamedQuery(name = "Reactions.findByCreatedAt", query = "SELECT r FROM Reactions r WHERE r.createdAt = :createdAt")
+
+})
 public class Reactions implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,11 +44,16 @@ public class Reactions implements Serializable {
     @Size(max = 4)
     @Column(name = "ReactionType")
     private String reactionType;
+    @Column(name = "CreatedAt")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Posts posts;
     @JoinColumn(name = "UserID", referencedColumnName = "UserID", insertable = false, updatable = false)
     @ManyToOne(optional = false)
+    @JsonIgnore
     private Users users;
 
     public Reactions() {
@@ -68,6 +81,14 @@ public class Reactions implements Serializable {
 
     public void setReactionType(String reactionType) {
         this.reactionType = reactionType;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Posts getPosts() {
@@ -110,5 +131,5 @@ public class Reactions implements Serializable {
     public String toString() {
         return "com.nms.pojo.Reactions[ reactionsPK=" + reactionsPK + " ]";
     }
-    
+
 }
