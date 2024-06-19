@@ -1,0 +1,31 @@
+/* Import themify and themes */
+@import "../../style.css";
+
+/* Base home styles */
+.home {
+  padding: 20px 70px;
+}
+
+/* Theme Light */
+.theme-light .home {
+  background-color: #f6f3f3; /* themed("bgSoft") */
+}
+
+/* Theme Dark */
+.theme-dark .home {
+  background-color: #333; /* themed("bgSoft") */
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .home {
+    padding: 10px;
+  }
+}
+
+/* Tablet styles */
+@media (max-width: 960px) {
+  .home {
+    padding: 20px;
+  }
+}

@@ -1,0 +1,116 @@
+/* Import themify and themes */
+@import "../../style.css";
+
+/* Base share styles */
+.share {
+  -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+/* Theme Light */
+.theme-light .share {
+  background-color: white; /* themed("bg") */
+  color: #000; /* themed("textColor") */
+}
+
+.theme-light .share .container hr {
+  background-color: lightgray; /* themed("border") */
+}
+
+.theme-light .share .container .top input {
+  color: #000; /* themed("textColor") */
+}
+
+.theme-light .share .container .bottom .left .item span {
+  color: gray;
+}
+
+/* Theme Dark */
+.theme-dark .share {
+  background-color: #222; /* themed("bg") */
+  color: whitesmoke; /* themed("textColor") */
+}
+
+.theme-dark .share .container hr {
+  background-color: #444; /* themed("border") */
+}
+
+.theme-dark .share .container .top input {
+  color: whitesmoke; /* themed("textColor") */
+}
+
+.theme-dark .share .container .bottom .left .item span {
+  color: gray;
+}
+
+/* Container styles */
+.share .container {
+  padding: 20px;
+}
+
+.share .container .top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.share .container .top img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.share .container .top input {
+  border: none;
+  outline: none;
+  padding: 20px 10px;
+  background-color: transparent;
+  width: 60%;
+}
+
+.share .container hr {
+  margin: 20px 0px;
+  border: none;
+  height: 0.5px;
+}
+
+.share .container .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share .container .bottom .left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.share .container .bottom .left .item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.share .container .bottom .left .item img {
+  height: 20px;
+}
+
+.share .container .bottom .left .item span {
+  font-size: 12px;
+  color: gray;
+}
+
+.share .container .bottom .right button {
+  border: none;
+  padding: 5px;
+  color: white;
+  cursor: pointer;
+  background-color: #5271ff;
+  border-radius: 3px;
+}

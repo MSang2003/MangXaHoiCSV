@@ -1,0 +1,55 @@
+/* Define light theme */
+.theme-light {
+  --textColor: #000;
+  --bg: white;
+  --logo: darkblue;
+  --bgSoft: #f6f3f3;
+  --textColorSoft: #555;
+  --border: lightgray;
+}
+
+/* Define dark theme */
+.theme-dark {
+  --textColor: whitesmoke;
+  --bg: #222;
+  --logo: white;
+  --bgSoft: #333;
+  --textColorSoft: lightgray;
+  --border: #444;
+}
+
+/* Apply the theme variables */
+body {
+  color: var(--textColor);
+  background-color: var(--bg);
+}
+
+.logo {
+  color: var(--logo);
+}
+
+.bg-soft {
+  background-color: var(--bgSoft);
+}
+
+.text-soft {
+  color: var(--textColorSoft);
+}
+
+.border {
+  border-color: var(--border);
+}
+
+/* Media queries for mobile */
+@media (max-width: 480px) {
+  .mobile {
+    /* Add mobile-specific styles here */
+  }
+}
+
+/* Media queries for tablet */
+@media (max-width: 960px) {
+  .tablet {
+    /* Add tablet-specific styles here */
+  }
+}
