@@ -24,9 +24,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -65,6 +67,8 @@ public class Posts implements Serializable {
     @Column(name = "UpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    @Column(name = "Image")
+    private String Image;
     @OneToMany(mappedBy = "postID", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Comments> commentsSet;
@@ -74,13 +78,16 @@ public class Posts implements Serializable {
     @OneToMany(mappedBy = "postID", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Surveys> surveysSet;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts",orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts", orphanRemoval = true)
     @JsonIgnore
     private Set<Reactions> reactionsSet;
     @JsonIgnore
     @JoinColumn(name = "UserID", referencedColumnName = "UserID")
     @ManyToOne
     private Users userID;
+    
+     @Transient
+    private MultipartFile ImageFile;
 
     public Posts() {
     }
@@ -205,5 +212,33 @@ public class Posts implements Serializable {
     public String toString() {
         return "com.nms.pojo.Posts[ postID=" + postID + " ]";
     }
-    
+
+    /**
+     * @return the Image
+     */
+    public String getImage() {
+        return Image;
+    }
+
+    /**
+     * @param Image the Image to set
+     */
+    public void setImage(String Image) {
+        this.Image = Image;
+    }
+
+    /**
+     * @return the ImageFile
+     */
+    public MultipartFile getImageFile() {
+        return ImageFile;
+    }
+
+    /**
+     * @param ImageFile the ImageFile to set
+     */
+    public void setImageFile(MultipartFile ImageFile) {
+        this.ImageFile = ImageFile;
+    }
+
 }

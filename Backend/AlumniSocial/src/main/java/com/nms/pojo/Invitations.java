@@ -57,7 +57,7 @@ public class Invitations implements Serializable {
     @Column(name = "UpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
-    @OneToMany( mappedBy = "invitations",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "invitations")
     private Set<Invitationrecipients> invitationrecipientsSet;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID")
     @ManyToOne

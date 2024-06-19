@@ -1,6 +1,7 @@
 package com.nms.pojo;
 
 import com.nms.pojo.Posts;
+import com.nms.pojo.Surveyoptions;
 import com.nms.pojo.Surveyresponses;
 import java.util.Date;
 import javax.annotation.Generated;
@@ -8,7 +9,7 @@ import javax.persistence.metamodel.SetAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.7.9.v20210604-rNA", date="2024-06-11T09:11:12")
+@Generated(value="EclipseLink-2.7.9.v20210604-rNA", date="2024-06-18T18:13:02")
 @StaticMetamodel(Surveys.class)
 public class Surveys_ { 
 
@@ -17,6 +18,7 @@ public class Surveys_ {
     public static volatile SetAttribute<Surveys, Surveyresponses> surveyresponsesSet;
     public static volatile SingularAttribute<Surveys, String> question;
     public static volatile SingularAttribute<Surveys, Posts> postID;
+    public static volatile SetAttribute<Surveys, Surveyoptions> surveyoptionsSet;
     public static volatile SingularAttribute<Surveys, Date> updatedAt;
 
 }

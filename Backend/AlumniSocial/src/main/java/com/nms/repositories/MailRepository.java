@@ -11,6 +11,5 @@ import java.util.List;
  * @author Admin
  */
 public interface MailRepository {
-
     void sendMail(String to, String subject, String content);
 }

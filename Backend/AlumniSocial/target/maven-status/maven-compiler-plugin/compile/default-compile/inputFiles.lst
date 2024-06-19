@@ -1,5 +1,6 @@
 E:\OU\AlumniSocial\src\main\java\com\nms\repositories\CommentRepository.java
 E:\OU\AlumniSocial\src\main\java\com\nms\repositories\StatsRepository.java
+E:\OU\AlumniSocial\src\main\java\com\nms\repositories\MailRepository.java
 E:\OU\AlumniSocial\src\main\java\com\nms\configs\WebAppContextConfig.java
 E:\OU\AlumniSocial\src\main\java\com\nms\controllers\UserController.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Surveys.java
@@ -8,6 +9,7 @@ E:\OU\AlumniSocial\src\main\java\com\nms\controllers\ApiReactionController.java
 E:\OU\AlumniSocial\src\main\java\com\nms\filters\JwtAuthenticationTokenFilter.java
 E:\OU\AlumniSocial\src\main\java\com\nms\filters\CustomAccessDeniedHandler.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Usergroups.java
+E:\OU\AlumniSocial\src\main\java\com\nms\repositories\impl\MailRepositoryImpl.java
 E:\OU\AlumniSocial\src\main\java\com\nms\filters\RestAuthenticationEntryPoint.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Groupmembers.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Reactions.java
@@ -16,6 +18,8 @@ E:\OU\AlumniSocial\src\main\java\com\nms\services\StatsService.java
 E:\OU\AlumniSocial\src\main\java\com\nms\configs\JwtSecurityConfig.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\InvitationrecipientsPK.java
 E:\OU\AlumniSocial\src\main\java\com\nms\repositories\impl\StatsRepositoryImpl.java
+E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Surveyoptions.java
+E:\OU\AlumniSocial\src\main\java\com\nms\services\MailService.java
 E:\OU\AlumniSocial\src\main\java\com\nms\components\JwtService.java
 E:\OU\AlumniSocial\src\main\java\com\nms\repositories\impl\ReactionRepositoryImpl.java
 E:\OU\AlumniSocial\src\main\java\com\nms\services\impl\ReactionServiceImpl.java
@@ -31,6 +35,7 @@ E:\OU\AlumniSocial\src\main\java\com\nms\controllers\ApiPostController.java
 E:\OU\AlumniSocial\src\main\java\com\nms\services\impl\CommentServiceImpl.java
 E:\OU\AlumniSocial\src\main\java\com\nms\configs\TilesConfig.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Invitations.java
+E:\OU\AlumniSocial\src\main\java\com\nms\services\impl\MailServiceImpl.java
 E:\OU\AlumniSocial\src\main\java\com\nms\services\impl\UsersServiceImpl.java
 E:\OU\AlumniSocial\src\main\java\com\nms\configs\DispatcherServeletInit.java
 E:\OU\AlumniSocial\src\main\java\com\nms\pojo\Invitationrecipients.java

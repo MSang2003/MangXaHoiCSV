@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,10 +56,12 @@ public class Surveys implements Serializable {
     @Column(name = "UpdatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    @OneToMany(mappedBy = "surveyID")
+    private Set<Surveyoptions> surveyoptionsSet;
     @JoinColumn(name = "PostID", referencedColumnName = "PostID")
     @ManyToOne
     private Posts postID;
-    @OneToMany(mappedBy = "surveyID",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "surveyID")
     private Set<Surveyresponses> surveyresponsesSet;
 
     public Surveys() {
@@ -100,6 +101,15 @@ public class Surveys implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @XmlTransient
+    public Set<Surveyoptions> getSurveyoptionsSet() {
+        return surveyoptionsSet;
+    }
+
+    public void setSurveyoptionsSet(Set<Surveyoptions> surveyoptionsSet) {
+        this.surveyoptionsSet = surveyoptionsSet;
     }
 
     public Posts getPostID() {

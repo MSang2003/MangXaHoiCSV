@@ -11,6 +11,7 @@ com\nms\pojo\Usergroups.class
 com\nms\controllers\ApiPostController.class
 com\nms\pojo\InvitationrecipientsPK.class
 com\nms\pojo\Invitations_.class
+com\nms\services\impl\MailServiceImpl.class
 com\nms\pojo\ReactionsPK.class
 com\nms\pojo\ReactionsPK_.class
 com\nms\configs\HibernateConfig.class
@@ -23,6 +24,7 @@ com\nms\repositories\PostRepository.class
 com\nms\services\ReactionService.class
 com\nms\filters\RestAuthenticationEntryPoint.class
 com\nms\pojo\Posts.class
+com\nms\repositories\impl\MailRepositoryImpl.class
 com\nms\repositories\ReactionRepository.class
 com\nms\services\CommentService.class
 com\nms\pojo\Comments.class
@@ -38,6 +40,7 @@ com\nms\services\impl\UsersServiceImpl.class
 com\nms\services\impl\StatsServiceImpl.class
 com\nms\pojo\Groupmembers_.class
 com\nms\pojo\Invitationrecipients_.class
+com\nms\services\MailService.class
 com\nms\pojo\Usergroups_.class
 com\nms\services\StatsService.class
 com\nms\services\impl\PostServiceImpl.class
@@ -55,10 +58,13 @@ com\nms\repositories\CommentRepository.class
 com\nms\pojo\GroupmembersPK.class
 com\nms\controllers\ApiCommentController.class
 com\nms\pojo\InvitationrecipientsPK_.class
+com\nms\pojo\Surveyoptions_.class
 com\nms\repositories\impl\StatsRepositoryImpl.class
 com\nms\configs\DispatcherServeletInit.class
 com\nms\controllers\IndexController.class
+com\nms\repositories\MailRepository.class
 com\nms\pojo\Groupmembers.class
 com\nms\configs\TilesConfig.class
 com\nms\pojo\Surveyresponses_.class
 com\nms\controllers\PostController.class
+com\nms\pojo\Surveyoptions.class

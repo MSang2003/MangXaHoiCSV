@@ -63,12 +63,12 @@ public class WebAppContextConfig implements WebMvcConfigurer {
         resolver.setDefaultEncoding("UTF-8");
         return resolver;
     }
-    
-    
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+        registry.addResourceHandler("/img/**").addResourceLocations("/statics/img/");
+
     }
 
 //    @Bean

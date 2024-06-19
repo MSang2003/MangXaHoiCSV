@@ -49,6 +49,9 @@ public class Surveyresponses implements Serializable {
     @Column(name = "CreatedAt")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+    @JoinColumn(name = "OptionID", referencedColumnName = "OptionID")
+    @ManyToOne
+    private Surveyoptions optionID;
     @JoinColumn(name = "SurveyID", referencedColumnName = "SurveyID")
     @ManyToOne
     private Surveys surveyID;
@@ -85,6 +88,14 @@ public class Surveyresponses implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Surveyoptions getOptionID() {
+        return optionID;
+    }
+
+    public void setOptionID(Surveyoptions optionID) {
+        this.optionID = optionID;
     }
 
     public Surveys getSurveyID() {

@@ -28,6 +28,7 @@
     <class>com.nms.pojo.User</class>
     <class>com.nms.pojo.Groupmembers</class>
     <class>com.nms.pojo.Invitationrecipients</class>
+    <class>com.nms.pojo.Surveyoptions</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/saledb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
