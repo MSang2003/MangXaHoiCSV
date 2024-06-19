@@ -43,11 +43,11 @@ const Navbar = () => {
           <Link className="chat"> <EmailOutlinedIcon /></Link>
         <NotificationsOutlinedIcon />
         <div className="user">
-          <img
+          {/* <img
             src={currentUser.profilePic}
             alt=""
-          />
-          <span>{currentUser.name}</span>
+          /> */}
+          {/* <span>{currentUser.name}</span> */}
           
         </div>
       </div>

@@ -11,13 +11,13 @@ const Share = () => {
   return (
     <div className="share">
       <div className="container">
-        <div className="top">
+        {/* <div className="top">
           <img
             src={currentUser.profilePic}
             alt=""
           />
           <input type="text" placeholder={`What's on your mind ${currentUser.name}?`} />
-        </div>
+        </div> */}
         <hr />
         <div className="bottom">
           <div className="left">

@@ -18,7 +18,7 @@ const Profile = () => {
   return (
     <div className="profile">
       <div className="images">
-        <img
+        {/* <img
           src={currentUser.profilePic}
           alt=""
           className="cover"
@@ -27,7 +27,7 @@ const Profile = () => {
           src={currentUser.profilePic}
           alt=""
           className="profilePic"
-        />
+        /> */}
       </div>
       <div className="profileContainer">
         <div className="uInfo">

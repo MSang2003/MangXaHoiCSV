@@ -9,9 +9,11 @@ import "./style.css";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 function App() {
-  const {currentUser} = useContext(AuthContext);
+  // const {currentUser} = useContext(AuthContext);
 
   const { darkMode } = useContext(DarkModeContext);
 
@@ -30,22 +32,23 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />;
-    }
+    // if (!currentUser) {
+    //   return <Navigate to="/login" />;
+    // }
 
     return children;
   };
 
   return (
+    <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Layout />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         >
           <Route index element={<Home />} />
@@ -55,6 +58,7 @@ function App() {
         <Route path="register" element={<Register />} />
       </Routes>
     </BrowserRouter>
+    </Provider>
   );
 }
 
