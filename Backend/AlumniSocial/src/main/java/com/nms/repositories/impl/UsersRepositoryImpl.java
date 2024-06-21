@@ -6,6 +6,11 @@ package com.nms.repositories.impl;
 
 import com.nms.pojo.Users;
 import com.nms.repositories.UsersRepository;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Query;
 import org.hibernate.Session;
@@ -70,14 +75,37 @@ public class UsersRepositoryImpl implements UsersRepository {
         q.setParameter("userName", userName);
         return (Users) q.getSingleResult();
     }
-    
-    
 
-    
-      @Override
+    @Override
     public boolean authUser(String username, String password) {
-        Users  u = this.getUserByUsername(username);
-        
+        Users u = this.getUserByUsername(username);
+
         return this.passswordEncoder.matches(password, u.getPassword());
     }
+
+    @Override
+    public void checkChangePassWord() {
+        Session session = this.factory.getObject().getCurrentSession();
+
+        Query query = session.createNamedQuery("Users.findByRole");
+        query.setParameter("role", "Teacher");
+        List<Users> userList = query.getResultList();
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Users user : userList) {
+            Date createdAtDate = user.getCreatedAt(); 
+
+            Instant instant = createdAtDate.toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            LocalDateTime createdAt = instant.atZone(zoneId).toLocalDateTime();
+
+            Duration duration = Duration.between(createdAt, now);
+
+            if (duration.toHours() >= 24 && this.passswordEncoder.matches("ou@123", user.getPassword())) {
+                user.setIsLocked(true);
+                session.update(user);
+            }
+        }
+    }
+
 }

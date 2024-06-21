@@ -7,6 +7,7 @@ package com.nms.controllers;
 import com.nms.pojo.Users;
 import com.nms.services.PostService;
 import com.nms.services.UsersSevice;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Map;
 import javax.validation.Valid;
@@ -30,11 +31,24 @@ public class PostController {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private UsersSevice userService;
+
     @GetMapping("/post")
-    public String userView(Model model) {
-        model.addAttribute("posts", this.postService.getPosts());
+    public String userView(Model model, @RequestParam Map<String, String> params, Principal principal) {
+        String isMyProfile = params.get("isMyProfile");
+        Integer pageNumber = Integer.valueOf(params.get("pageNumber"));
+
+        if ("trued".equals(isMyProfile)) {
+            String username = principal.getName();
+            Users user = userService.getUserByUsername(username);
+            model.addAttribute("posts", this.postService.getPosts(user.getUserID(),pageNumber));
+
+        } else {
+            model.addAttribute("posts", this.postService.getPosts(null,pageNumber));
+
+        }
         return "post";
     }
-    
-    
+
 }

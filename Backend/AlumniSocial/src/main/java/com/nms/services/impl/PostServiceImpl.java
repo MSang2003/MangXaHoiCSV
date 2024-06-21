@@ -6,7 +6,10 @@ package com.nms.services.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.nms.pojo.Invitations;
 import com.nms.pojo.Posts;
+import com.nms.pojo.Surveyoptions;
+import com.nms.pojo.Surveys;
 import com.nms.repositories.PostRepository;
 import com.nms.repositories.StatsRepository;
 import com.nms.services.PostService;
@@ -33,8 +36,8 @@ public class PostServiceImpl implements PostService {
     private Cloudinary cloudinary;
 
     @Override
-    public List<Map<String, Object>> getPosts() {
-        return this.postRepo.getPosts();
+    public List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber) {
+        return this.postRepo.getPosts(userID, pageNumber);
     }
 
     @Override
@@ -43,19 +46,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void createOrUpdatePost(Posts post) {
-        try {
-            Map res = this.cloudinary.uploader().upload(post.getImageFile().getBytes(),
-                    ObjectUtils.asMap("resource_type", "auto"));
-            post.setImage(res.get("secure_url").toString());
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+    public void createOrUpdateStatusPost(Posts post) {
+        if (post.getImageFile() != null) {
+            try {
+                Map res = this.cloudinary.uploader().upload(post.getImageFile().getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
+                post.setImage(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
         }
-        this.postRepo.createOrUpdatePost(post);
+        this.postRepo.createOrUpdateStatusPost(post);
+
     }
 
     @Override
     public Posts getPostById(int id) {
         return this.postRepo.getPostById(id);
+    }
+
+    @Override
+    public void createInvitationPost(Posts post, Invitations invitation) {
+        this.postRepo.createInvitationPost(post, invitation);
+    }
+
+    @Override
+    public void createInvitationPost(Posts post, Surveys survey, List<Surveyoptions> surveyOptions) {
+        this.postRepo.createInvitationPost(post, survey, surveyOptions);
     }
 }

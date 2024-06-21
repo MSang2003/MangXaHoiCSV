@@ -4,9 +4,10 @@
  */
 package com.nms.repositories;
 
-
+import com.nms.pojo.Invitations;
 import com.nms.pojo.Posts;
-import com.nms.pojo.Users;
+import com.nms.pojo.Surveyoptions;
+import com.nms.pojo.Surveys;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,17 @@ import java.util.Map;
  * @author Admin
  */
 public interface PostRepository {
-        List<Map<String, Object>> getPosts();
-        void deletePostById(int id);
-        void createOrUpdatePost(Posts post);
-        Posts getPostById(int id);
-        
+
+    List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber);
+
+    void deletePostById(int id);
+
+    void createOrUpdateStatusPost(Posts post);
+
+    Posts getPostById(int id);
+
+    void createInvitationPost(Posts post, Invitations invitation);
+
+    void createInvitationPost(Posts post, Surveys survey, List<Surveyoptions> surveyOptions);
+
 }

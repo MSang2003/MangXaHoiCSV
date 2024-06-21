@@ -4,7 +4,10 @@
  */
 package com.nms.services;
 
+import com.nms.pojo.Invitations;
 import com.nms.pojo.Posts;
+import com.nms.pojo.Surveyoptions;
+import com.nms.pojo.Surveys;
 import com.nms.pojo.Users;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +19,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface PostService {
 
-   List<Map<String, Object>> getPosts();
+    List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber);
+
     void deletePostById(int id);
-    void createOrUpdatePost(Posts post);
-     public Posts getPostById(int id);
+
+    void createOrUpdateStatusPost(Posts post);
+
+    public Posts getPostById(int id);
+    
+     public void createInvitationPost(Posts post, Invitations invitation);
+     public void createInvitationPost(Posts post, Surveys survey, List<Surveyoptions> surveyOptions);
 }

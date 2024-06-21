@@ -28,6 +28,8 @@ public interface UsersSevice extends UserDetailsService{
     
     public boolean authUser(String username, String password);
     
+      void checkChangePassWord();
+    
 }
 
 

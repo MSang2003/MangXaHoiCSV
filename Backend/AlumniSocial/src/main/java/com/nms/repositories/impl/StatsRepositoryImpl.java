@@ -5,17 +5,23 @@
 package com.nms.repositories.impl;
 
 import com.nms.pojo.Posts;
+import com.nms.pojo.Surveyoptions;
+import com.nms.pojo.Surveyresponses;
+import com.nms.pojo.Surveys;
 import com.nms.pojo.Users;
 import com.nms.repositories.StatsRepository;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
@@ -98,7 +104,7 @@ public class StatsRepositoryImpl implements StatsRepository {
 
     @Override
     public List<Object[]> statsPostByUser(String name, int year, String period) {
-         Session s = this.factory.getObject().getCurrentSession();
+        Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
 
@@ -126,6 +132,44 @@ public class StatsRepositoryImpl implements StatsRepository {
         Query query = s.createQuery(q);
 
         return query.getResultList();
+    }
+
+    @Override
+    public List<Map<String, Object>> statsSurveyResponses(Integer surveyID) {
+
+        Session s = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+
+        Root<Surveyresponses> root = q.from(Surveyresponses.class);
+        Join<Surveyresponses, Surveyoptions> joinOption = root.join("optionID");
+        Join<Surveyresponses, Surveys> joinSurvey = root.join("surveyID");
+
+        q.multiselect(joinSurvey.get("surveyID"), joinSurvey.get("question"), joinOption.get("optionText"), b.count(root.get("responseID")))
+                .groupBy(joinSurvey.get("surveyID"), joinSurvey.get("question"), joinOption.get("optionID"), joinOption.get("optionText"))
+                .orderBy(b.asc(joinSurvey.get("surveyID")), b.asc(joinOption.get("optionID")));
+
+        // Thêm điều kiện where để lọc theo surveyID
+        q.where(b.equal(joinSurvey.get("surveyID"), surveyID));
+        Query query = s.createQuery(q);
+        
+        
+        List<Object[]> result = query.getResultList();
+        Map<Integer, List<String>> surveyOptionsMap = new HashMap<>();
+        List<Map<String, Object>> mappedResults = new ArrayList<>();
+
+        for (Object[] row : result) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("surveyID", row[0]);
+            map.put("question", row[1]);
+            map.put("optionText", row[2]);
+            map.put("amount", row[3]);
+
+            mappedResults.add(map);
+        }
+
+        return mappedResults;
     }
 
 }

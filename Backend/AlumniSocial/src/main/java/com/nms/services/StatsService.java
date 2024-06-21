@@ -6,6 +6,7 @@ package com.nms.services;
 
 import com.nms.pojo.Users;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -17,6 +18,8 @@ public interface StatsService{
     List<Object[]> statsAlumniByYear();
     List<Object[]> statsAmountUser(String role, int year, String period);
     List<Object[]> statsPostByUser(String name, int year, String period);
+    
+    List<Map<String, Object>> statsSurveyResponses(Integer surveyID);
 }
 
 

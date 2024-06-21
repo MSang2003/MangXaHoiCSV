@@ -6,8 +6,6 @@ package com.nms.repositories;
 
 
 import com.nms.pojo.Comments;
-import com.nms.pojo.Posts;
-import com.nms.pojo.Users;
 import java.util.List;
 
 /**

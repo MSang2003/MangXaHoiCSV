@@ -26,5 +26,7 @@ public interface UsersRepository {
     Users getUserByUsername(String username);
 
     boolean authUser(String username, String password);
+    
+    void checkChangePassWord();
 
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +41,7 @@ public class UsersServiceImpl implements UsersSevice {
 
     @Override
     public void addUser(Users user) {
-        if ( user.getAvatarFile() != null && !user.getAvatarFile().isEmpty()) {
+        if (user.getAvatarFile() != null && !user.getAvatarFile().isEmpty()) {
             try {
                 Map res = this.cloudinary.uploader().upload(user.getAvatarFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
@@ -49,8 +50,8 @@ public class UsersServiceImpl implements UsersSevice {
                 System.err.println(ex.getMessage());
             }
         }
-        
-        if ( user.getCoverImageFile() != null && !user.getCoverImageFile().isEmpty()) {
+
+        if (user.getCoverImageFile() != null && !user.getCoverImageFile().isEmpty()) {
             try {
                 Map res = this.cloudinary.uploader().upload(user.getCoverImageFile().getBytes(),
                         ObjectUtils.asMap("resource_type", "auto"));
@@ -93,21 +94,28 @@ public class UsersServiceImpl implements UsersSevice {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-   Users u = this.userRepo.getUserByUsername(username);
+        Users u = this.userRepo.getUserByUsername(username);
         if (u == null) {
             throw new UsernameNotFoundException("Không tồn tại!");
         }
-      
+
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(u.getRole()));
-        
+
         return new org.springframework.security.core.userdetails.User(
                 u.getName(), u.getPassword(), authorities);
     }
-    
-    
+
     @Override
     public boolean authUser(String username, String password) {
         return this.userRepo.authUser(username, password);
+    }
+
+
+
+    @Scheduled(fixedRate = 360000)
+    @Override
+    public void checkChangePassWord() {
+        this.userRepo.checkChangePassWord();
     }
 }

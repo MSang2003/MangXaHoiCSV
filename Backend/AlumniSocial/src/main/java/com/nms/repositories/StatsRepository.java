@@ -5,6 +5,7 @@
 package com.nms.repositories;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,4 +18,6 @@ public interface StatsRepository {
     List<Object[]> statsAmountUser(String role, int year, String period);
 
     List<Object[]> statsPostByUser(String name, int year, String period);
+
+    List<Map<String, Object>> statsSurveyResponses(Integer surveyID);
 }

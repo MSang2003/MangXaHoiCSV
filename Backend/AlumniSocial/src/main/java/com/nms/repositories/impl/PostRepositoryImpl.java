@@ -35,6 +35,8 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,15 +47,19 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
+@PropertySource("classpath:configs.properties")
 public class PostRepositoryImpl implements PostRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
+    
+     @Autowired
+    private Environment env;
 
     SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
 
     @Override
-    public List<Map<String, Object>> getPosts() {
+    public List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
@@ -88,7 +94,18 @@ public class PostRepositoryImpl implements PostRepository {
                 )
                 .orderBy(b.asc(userJoin.get("name")));
 
+        if (userID != null) {
+            q.where(b.equal(userJoin.get("userID"), 4));
+        }
+
         Query query = s.createQuery(q);
+        if (pageNumber != null) {
+            int pageSize = Integer.parseInt(env.getProperty("post.pageSize").toString());
+            int start = (pageNumber - 1) * pageSize;
+            query.setFirstResult(start);
+            query.setMaxResults(pageSize);
+        }
+
         List<Object[]> result = query.getResultList();
         Map<Integer, List<String>> surveyOptionsMap = new HashMap<>();
         List<Map<String, Object>> mappedResults = new ArrayList<>();
@@ -119,7 +136,6 @@ public class PostRepositoryImpl implements PostRepository {
                     surveyOptionsMap.get(postID).add((String) row[8]);
                 }
             }
-
             mappedResults.add(map);
         }
 
@@ -129,7 +145,6 @@ public class PostRepositoryImpl implements PostRepository {
                 postMap.put("surveyOptions", surveyOptionsMap.get(postID));
             }
         }
-
         return mappedResults;
     }
 
@@ -141,7 +156,7 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public void createOrUpdatePost(Posts post) {
+    public void createOrUpdateStatusPost(Posts post) {
 
         Session s = this.factory.getObject().getCurrentSession();
         s.saveOrUpdate(post);
@@ -151,6 +166,24 @@ public class PostRepositoryImpl implements PostRepository {
     public Posts getPostById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(Posts.class, id);
+    }
+
+    @Override
+    public void createInvitationPost(Posts post, Invitations invitation) {
+        Session s = this.factory.getObject().getCurrentSession();
+        s.save(post);
+        s.save(invitation);
+    }
+
+    @Override
+    public void createInvitationPost(Posts post, Surveys survey, List<Surveyoptions> surveyOptions) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        s.save(post);
+        s.save(survey);
+        for (Surveyoptions option : surveyOptions) {
+            s.save(option);
+        }
     }
 
 }
