@@ -7,6 +7,7 @@
   -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
   border-radius: 20px;
+  margin-bottom: 20px;
 }
 
 /* Theme Light */
@@ -104,4 +105,68 @@
   gap: 10px;
   cursor: pointer;
   font-size: 14px;
+}
+
+.post .container .info .reaction-item {
+  position: relative;
+}
+
+.reaction-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  display: flex;
+  gap: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 5px;
+}
+
+.reaction-menu > svg {
+  cursor: pointer;
+}
+
+.reaction-menu > svg:hover {
+  transform: scale(1.2);
+}
+
+/* Poll styles for survey */
+.poll {
+  padding: 10px 0;
+}
+
+.poll__title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.poll__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.poll__option button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+.poll__option button:hover {
+  background-color: #e0e0e0;
+}
+
+.poll__option button.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
 }

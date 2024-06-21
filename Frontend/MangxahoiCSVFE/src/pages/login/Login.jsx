@@ -1,14 +1,17 @@
-import { useContext, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
 import { Button, Container, Form } from "react-bootstrap";
 import "./login.css";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from '../../redux/reducers/userActions';
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const current = useSelector((state) => state.user.user);
+
   const [user, setUser] = useState({});
   const [err, setErr] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const fields = [
     {
@@ -24,30 +27,34 @@ const Login = () => {
   ];
 
   const change = (e, field) => {
-    setUser(current => {
-      return { ...current, [field]: e.target.value }
-    });
+    setUser(prevState => ({
+      ...prevState,
+      [field]: e.target.value
+    }));
+    
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const loggedInUser = await login(user);
-      console.log(loggedInUser);
-      if (loggedInUser) {
-        navigate("/profile/1");
-      }
+      await dispatch(login(user.username, user.password));
     } catch (err) {
-      setErr(err.message);  // Hiển thị thông báo lỗi nếu có
+      setErr(err.message);
     }
   };
+
+  useEffect(() => {
+    if (current && current.userID) {
+      navigate(`/`);
+    }
+  }, [current, navigate]);
 
   return (
     <Container>
       <div className="login">
         <div className="card">
           <div className="left">
-            <h1>Hello World.</h1>
+            <h1>Alunium Website.</h1>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
               alias totam numquam ipsa exercitationem dignissimos, error nam,

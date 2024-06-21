@@ -7,7 +7,6 @@ import Home from "./pages/home/Home";
 import Profile from "./pages/profile/Profile";
 import "./style.css";
 import { useContext } from "react";
-import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -15,11 +14,10 @@ import store from "./redux/store";
 function App() {
   // const {currentUser} = useContext(AuthContext);
 
-  const { darkMode } = useContext(DarkModeContext);
 
   const Layout = () => {
     return (
-      <div className={`theme-${darkMode ? "dark" : "light"}`}>
+      <div>
         <Navbar />
         <div style={{ display: "flex" }}>
           <LeftBar />

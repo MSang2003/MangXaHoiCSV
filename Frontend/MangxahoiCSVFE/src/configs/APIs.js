@@ -1,25 +1,23 @@
 import axios from "axios";
 import cookie from "react-cookies";
 
-const BASE_URL = 'https://longtocdo107.pythonanywhere.com/';
+const BASE_URL = 'http://localhost:8080/AlumniSocial/';
 
 export const endpoints = {
-    'categories': '/api/categories/', 
-    'posts': '/api/posts/',
-    'details': (postId) => `/api/posts/${postId}/`,
+    'posts': '/api/posts',
+    'comments': (postID) => `/api/posts/${postID}/comments`,
     'register': '/api/users/',
-    'login': '/o/token/',
-    'current-user': '/current-user/'
+    'login': '/api/login/',
+    'current-user': '/api/current-user/',
+    'reactions':(postID )=>`/api/post/${postID}/reaction`,
 }
 
 export const authApi = () => {
-    const token = cookie.load("token");
-
     return axios.create({
-        baseURL: BASE_URL,
+        baseURL: BASE_URL,  
         headers: {
-             'Authorization': `Bearer ${token}`
-        }
+              'Authorization': `${cookie.load('token')}`}
+
     });
 }
 

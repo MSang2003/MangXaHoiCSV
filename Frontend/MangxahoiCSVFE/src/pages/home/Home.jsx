@@ -5,9 +5,8 @@ import "./home.css"
 import { useSelector } from "react-redux"
 
 const Home = () => {
-  const name = useSelector((state) => state.user.user.name);
+  const name = useSelector((state) => state.user.user);
   useEffect(()=>{
-console.log(name)
   },[])
   return (
     <div className="home">

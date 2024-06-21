@@ -1,21 +1,28 @@
 import "./navbar.css";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { DarkModeContext } from "../../context/darkModeContext";
-import { AuthContext } from "../../context/authContext";
-import Profile from "../../pages/profile/Profile";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from '../../redux/reducers/userActions';
 
 const Navbar = () => {
-  const { toggle, darkMode } = useContext(DarkModeContext);
-  const { currentUser } = useContext(AuthContext);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <div className="navbar">
@@ -23,15 +30,7 @@ const Navbar = () => {
         <Link to="/" style={{ textDecoration: "none" }}>
           <span>Alunium</span>
         </Link>
-        
-          <Link to="/"><HomeOutlinedIcon /></Link>
-        
-       
-        {darkMode ? (
-          <WbSunnyOutlinedIcon onClick={toggle} />
-        ) : (
-          <DarkModeOutlinedIcon onClick={toggle} />
-        )}
+        <Link to="/"><HomeOutlinedIcon /></Link>
         <GridViewOutlinedIcon />
         <div className="search">
           <SearchOutlinedIcon />
@@ -39,17 +38,17 @@ const Navbar = () => {
         </div>
       </div>
       <div className="right">
-          <Link className="profile" to="/profile/:{currentUser.id}"><PersonOutlinedIcon /></Link>
-          <Link className="chat"> <EmailOutlinedIcon /></Link>
+        <Link className="profile" to={`/profile/${user?.userID}`}><PersonOutlinedIcon /></Link>
+        <Link className="chat"><EmailOutlinedIcon /></Link>
         <NotificationsOutlinedIcon />
         <div className="user">
-          {/* <img
-            src={currentUser.profilePic}
-            alt=""
-          /> */}
-          {/* <span>{currentUser.name}</span> */}
-          
+          <img
+            src={user?.avatar}
+            alt="avatar_user"
+          />
+          <span>{user?.name}</span>
         </div>
+        <button onClick={handleLogout} className="logout-button">Đăng xuất</button>
       </div>
     </div>
   );

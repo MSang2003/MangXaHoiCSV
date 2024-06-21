@@ -9,25 +9,25 @@ import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts"
-import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const { currentUser } = useContext(AuthContext);
-
+  const user = useSelector((state) => state.user.user);
+  console.log(user)
   return (
     <div className="profile">
       <div className="images">
-        {/* <img
-          src={currentUser.profilePic}
+        <img
+          src={user.avatar}
           alt=""
           className="cover"
         />
         <img
-          src={currentUser.profilePic}
+          src={user.avatar}
           alt=""
           className="profilePic"
-        /> */}
+        />
       </div>
       <div className="profileContainer">
         <div className="uInfo">
@@ -49,7 +49,7 @@ const Profile = () => {
             </a>
           </div>
           <div className="center">
-            <span>Jane Doe</span>
+            <span>{user.name}</span>
             <div className="info">
               <div className="item">
                 <PlaceIcon />
@@ -57,7 +57,7 @@ const Profile = () => {
               </div>
               <div className="item">
                 <LanguageIcon />
-                <span>lama.dev</span>
+                <span>http://facebook.com</span>
               </div>
             </div>
             <button>follow</button>

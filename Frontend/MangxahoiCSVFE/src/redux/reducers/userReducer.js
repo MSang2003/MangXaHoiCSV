@@ -3,10 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: {
-      name:"Sang",
-      phone:""
-    },
+    user:  JSON.parse(localStorage.getItem('user')) || null,
     loading: false,
     error: null,
   },
@@ -23,9 +20,12 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    logoutSuccess:(state,action)=>{
+      state.user = null;
+    }
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure ,logoutSuccess} = userSlice.actions;
 
 export default userSlice.reducer;
