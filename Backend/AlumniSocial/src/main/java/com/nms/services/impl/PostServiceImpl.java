@@ -36,8 +36,8 @@ public class PostServiceImpl implements PostService {
     private Cloudinary cloudinary;
 
     @Override
-    public List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber) {
-        return this.postRepo.getPosts(userID, pageNumber);
+    public Map<String, Object> getPosts(Integer userID, Integer pageNumber,Boolean isProfile) {
+        return this.postRepo.getPosts(userID, pageNumber,isProfile);
     }
 
     @Override

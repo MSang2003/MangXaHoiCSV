@@ -5,29 +5,21 @@
 package com.nms.repositories.impl;
 
 import com.nms.pojo.Comments;
-import com.nms.pojo.Posts;
-import com.nms.pojo.Reactions;
 import com.nms.pojo.Users;
 import com.nms.repositories.CommentRepository;
-import com.nms.repositories.PostRepository;
-import com.nms.repositories.StatsRepository;
-import com.nms.repositories.UsersRepository;
-import java.time.Year;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.Map;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.springframework.jdbc.core.JdbcOperationsExtensionsKt.query;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,20 +31,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class CommentRepositoryImpl implements CommentRepository {
-    
+
     @Autowired
     private LocalSessionFactoryBean factory;
-    
+
     @Override
-    public List<Object[]> getCommentsByPostId(int postId) {
+    public List<Map<String, Object>> getCommentsByPostId(int postId) {
         Session s = this.factory.getObject().getCurrentSession();
-        
+
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
         Root<Comments> root = q.from(Comments.class);
-        
+
         Join<Comments, Users> userJoin = root.join("userID", JoinType.LEFT);
-        
+
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(b.equal(root.get("postID"), postId));
 
@@ -66,25 +58,41 @@ public class CommentRepositoryImpl implements CommentRepository {
         )
                 .where(predicates.toArray(new Predicate[0]))
                 .orderBy(b.desc(root.get("createdAt")));
-        
+
         Query query = s.createQuery(q);
-        
-        return query.getResultList();
+
+        List<Object[]> result = query.getResultList();
+        List<Map<String, Object>> mappedResults = new ArrayList<>();
+
+        for (Object[] row : result) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("commentID", row[0]);
+            map.put("content", row[1]);
+            map.put("createdAt", row[2]);
+            map.put("userName", row[3]);
+            map.put("avatar", row[4]);
+
+            mappedResults.add(map);
+        }
+
+        return mappedResults;
+
     }
-    
+
     @Override
     public void deleteCommentById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         Comments comment = s.get(Comments.class, id);
         s.delete(comment);
     }
-    
+
     @Override
     public Comments getCommentById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
         return s.get(Comments.class, id);
     }
-    
+
     @Override
     public void deleteComment(Comments comment) {
         Session s = this.factory.getObject().getCurrentSession();
@@ -93,8 +101,8 @@ public class CommentRepositoryImpl implements CommentRepository {
 
     @Override
     public void createOrUpdateComment(Comments comment) {
-         Session s = this.factory.getObject().getCurrentSession();
-         s.saveOrUpdate(comment);
+        Session s = this.factory.getObject().getCurrentSession();
+        s.saveOrUpdate(comment);
     }
-    
+
 }

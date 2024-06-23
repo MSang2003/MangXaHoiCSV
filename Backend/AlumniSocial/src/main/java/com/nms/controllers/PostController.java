@@ -42,10 +42,10 @@ public class PostController {
         if ("trued".equals(isMyProfile)) {
             String username = principal.getName();
             Users user = userService.getUserByUsername(username);
-            model.addAttribute("posts", this.postService.getPosts(user.getUserID(),pageNumber));
+//            model.addAttribute("posts", this.postService.getPosts(user.getUserID(),pageNumber));
 
         } else {
-            model.addAttribute("posts", this.postService.getPosts(null,pageNumber));
+//            model.addAttribute("posts", this.postService.getPosts(null,pageNumber));
 
         }
         return "post";

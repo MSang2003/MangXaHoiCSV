@@ -8,6 +8,7 @@ import com.nms.pojo.Comments;
 import com.nms.pojo.Posts;
 import com.nms.pojo.Users;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -16,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface CommentService {
 
-    List<Object[]> getCommentsByPostId(int id);
+    List<Map<String, Object>> getCommentsByPostId(int id);
 
     public void deleteCommentById(int id);
 

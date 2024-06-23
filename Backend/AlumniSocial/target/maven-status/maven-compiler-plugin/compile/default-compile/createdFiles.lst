@@ -21,10 +21,12 @@ com\nms\components\JwtService.class
 com\nms\services\impl\ReactionServiceImpl.class
 com\nms\pojo\GroupmembersPK_.class
 com\nms\repositories\PostRepository.class
+com\nms\controllers\ApiUserGroupsController.class
 com\nms\services\ReactionService.class
 com\nms\filters\RestAuthenticationEntryPoint.class
 com\nms\pojo\Posts.class
 com\nms\repositories\impl\MailRepositoryImpl.class
+com\nms\repositories\impl\UserGroupsRepositoryImpl.class
 com\nms\repositories\ReactionRepository.class
 com\nms\services\CommentService.class
 com\nms\pojo\Comments.class
@@ -34,6 +36,7 @@ com\nms\pojo\Posts_.class
 com\nms\pojo\Users.class
 com\nms\services\PostService.class
 com\nms\pojo\Invitations.class
+com\nms\services\impl\UserGroupsServiceImpl.class
 com\nms\services\UsersSevice.class
 com\nms\repositories\StatsRepository.class
 com\nms\services\impl\UsersServiceImpl.class
@@ -49,12 +52,14 @@ com\nms\filters\CustomAccessDeniedHandler.class
 com\nms\repositories\impl\CommentRepositoryImpl.class
 com\nms\configs\SpringSecurityConfig.class
 com\nms\pojo\Invitationrecipients.class
+com\nms\repositories\UserGroupsRepository.class
 com\nms\controllers\ApiUserController.class
 com\nms\repositories\impl\UsersRepositoryImpl.class
 com\nms\filters\JwtAuthenticationTokenFilter.class
 com\nms\pojo\Surveys_.class
 com\nms\pojo\Comments_.class
 com\nms\repositories\CommentRepository.class
+com\nms\services\UserGroupsService.class
 com\nms\pojo\GroupmembersPK.class
 com\nms\controllers\ApiCommentController.class
 com\nms\pojo\InvitationrecipientsPK_.class

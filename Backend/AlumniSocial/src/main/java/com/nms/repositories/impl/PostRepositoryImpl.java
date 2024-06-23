@@ -52,14 +52,15 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
-    
-     @Autowired
+
+    @Autowired
     private Environment env;
 
-    SimpleDateFormat dateFormatter = new SimpleDateFormat("MM-dd-yyyy", Locale.US);
+    @Autowired
+    private SimpleDateFormat dateFormatter;
 
     @Override
-    public List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber) {
+    public Map<String, Object> getPosts(Integer userID, Integer pageNumber, Boolean isProfile) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
@@ -74,39 +75,78 @@ public class PostRepositoryImpl implements PostRepository {
         Join<Posts, Surveys> surveyJoin = postRoot.join("surveysSet", JoinType.LEFT);
         Join<Surveys, Surveyoptions> surveyOptionsJoin = surveyJoin.join("surveyoptionsSet", JoinType.LEFT);
 
+        // Subqueries to count reactions of each type
+        Subquery<Long> countHahaSubquery = q.subquery(Long.class);
+        Root<Reactions> hahaReactionRoot = countHahaSubquery.from(Reactions.class);
+        countHahaSubquery.select(b.count(hahaReactionRoot))
+                .where(
+                        b.equal(hahaReactionRoot.get("reactionsPK").get("postID"), postRoot.get("postID")),
+                        b.equal(hahaReactionRoot.get("reactionType"), "Haha")
+                );
+
+        Subquery<Long> countLikeSubquery = q.subquery(Long.class);
+        Root<Reactions> likeReactionRoot = countLikeSubquery.from(Reactions.class);
+        countLikeSubquery.select(b.count(likeReactionRoot))
+                .where(
+                        b.equal(likeReactionRoot.get("reactionsPK").get("postID"), postRoot.get("postID")),
+                        b.equal(likeReactionRoot.get("reactionType"), "Like")
+                );
+
+        Subquery<Long> countLoveSubquery = q.subquery(Long.class);
+        Root<Reactions> loveReactionRoot = countLoveSubquery.from(Reactions.class);
+        countLoveSubquery.select(b.count(loveReactionRoot))
+                .where(
+                        b.equal(loveReactionRoot.get("reactionsPK").get("postID"), postRoot.get("postID")),
+                        b.equal(loveReactionRoot.get("reactionType"), "Love")
+                );
+
         q.multiselect(
                 postRoot.get("postID"),
                 postRoot.get("content"),
                 postRoot.get("createdAt"),
                 postRoot.get("postType"),
                 userJoin.get("name"),
-                b.count(reactionJoin), // Count of reactions
-                b.count(commentJoin), // Count of comments
+                userJoin.get("avatar"),
+                countHahaSubquery.getSelection(),
+                countLikeSubquery.getSelection(),
+                countLoveSubquery.getSelection(),
+                b.count(commentJoin),
                 invitationJoin.get("eventDetails"),
                 surveyOptionsJoin.get("optionText"),
-                postRoot.get("Image") // Add Image field here
+                postRoot.get("Image"),
+                postRoot.get("isCommentLocked") // Add isCommentLocked field here
         )
                 .groupBy(
                         postRoot.get("postID"),
+                        userJoin.get("name"),
+                        userJoin.get("avatar"),
                         invitationJoin.get("eventDetails"),
                         surveyOptionsJoin.get("optionText"),
-                        postRoot.get("Image") // Add Image field here
+                        postRoot.get("Image"),
+                        postRoot.get("isCommentLocked") // Group by isCommentLocked field here
                 )
                 .orderBy(b.asc(userJoin.get("name")));
 
-        if (userID != null) {
-            q.where(b.equal(userJoin.get("userID"), 4));
+        if (isProfile == true) {
+            q.where(b.equal(userJoin.get("userID"), userID));
         }
 
         Query query = s.createQuery(q);
+        int pageSize = Integer.parseInt(env.getProperty("post.pageSize").toString());
+
         if (pageNumber != null) {
-            int pageSize = Integer.parseInt(env.getProperty("post.pageSize").toString());
             int start = (pageNumber - 1) * pageSize;
             query.setFirstResult(start);
-            query.setMaxResults(pageSize);
+            query.setMaxResults(pageSize + 1); // Fetch one extra record to determine if there is a next page
         }
 
         List<Object[]> result = query.getResultList();
+        boolean hasNext = result.size() > pageSize;
+
+        if (hasNext) {
+            result.remove(result.size() - 1); // Remove the extra record fetched for the next page check
+        }
+
         Map<Integer, List<String>> surveyOptionsMap = new HashMap<>();
         List<Map<String, Object>> mappedResults = new ArrayList<>();
 
@@ -122,18 +162,23 @@ public class PostRepositoryImpl implements PostRepository {
             map.put("createdAt", formattedDate);
             map.put("postType", row[3]);
             map.put("userName", row[4]);
-            map.put("reactionCount", row[5]);
-            map.put("commentCount", row[6]);
-            map.put("image", row[9]);
+            map.put("avatar", row[5]);
+            map.put("hahaCount", row[6]);
+            map.put("likeCount", row[7]);
+            map.put("loveCount", row[8]);
+            map.put("commentCount", row[9]);
+            map.put("eventDetails", row[10]);
+            map.put("image", row[12]);
+            map.put("isCommentLocked", row[13]); // Add isCommentLocked to the map
 
             if ("Invitation".equals(postType)) {
-                map.put("eventDetails", row[7]);
+                map.put("eventDetails", row[10]);
             } else if ("Survey".equals(postType)) {
                 if (!surveyOptionsMap.containsKey(postID)) {
                     surveyOptionsMap.put(postID, new ArrayList<>());
                 }
-                if (row[8] != null) {
-                    surveyOptionsMap.get(postID).add((String) row[8]);
+                if (row[11] != null) {
+                    surveyOptionsMap.get(postID).add((String) row[11]);
                 }
             }
             mappedResults.add(map);
@@ -145,7 +190,13 @@ public class PostRepositoryImpl implements PostRepository {
                 postMap.put("surveyOptions", surveyOptionsMap.get(postID));
             }
         }
-        return mappedResults;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", mappedResults);
+        response.put("previous", pageNumber != null && pageNumber > 1);
+        response.put("next", hasNext);
+
+        return response;
     }
 
     @Override

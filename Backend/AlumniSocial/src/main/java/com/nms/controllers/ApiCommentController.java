@@ -57,14 +57,13 @@ public class ApiCommentController {
 
     @GetMapping("/post/{postID}/comments")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<List<Object[]>> getCommentsByPostId(Model model, @PathVariable(value = "postID") int postID) {
-        List<Object[]> comments = commentService.getCommentsByPostId(postID);
+    public ResponseEntity<List<Map<String, Object>>> getCommentsByPostId(Model model, @PathVariable(value = "postID") int postID) {
+        List<Map<String, Object>> comments = commentService.getCommentsByPostId(postID);
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(comments);
     }
-
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable(value = "id") int id, Principal principal) {
         Comments comment = commentService.getCommentById(id);

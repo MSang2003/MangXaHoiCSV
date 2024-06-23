@@ -42,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Admin
  */
-
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/api")
@@ -53,25 +52,20 @@ public class ApiPostController {
 
     @Autowired
     private UsersSevice userService;
-    
+
     @Autowired
     private StatsService statsService;
 
-    @GetMapping(path = "/posts/", consumes = {
-        MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/posts/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<List<Map<String, Object>>> getPosts(@RequestParam Map<String, String> params, Principal p) {
-        String isPostUser = params.get("isPostUser");
-        Integer pageNumber = Integer.valueOf(params.get("pageNumber"));
-        if ("true".equals(isPostUser)) {
-            Users u = this.userService.getUserByUsername(p.getName());
-            List<Map<String, Object>> posts = this.postService.getPosts(u.getUserID(), pageNumber);
-            return ResponseEntity.ok(posts);
+    public ResponseEntity<Map<String, Object>> getPosts(@RequestParam Map<String, String> params, Principal p) {
+        Boolean isProfile = Boolean.valueOf(params.get("isProfile"));
 
-        } else {
-            List<Map<String, Object>> posts = this.postService.getPosts(null, pageNumber);
-            return ResponseEntity.ok(posts);
-        }
+        System.out.println(isProfile);
+        Integer pageNumber = Integer.valueOf(params.get("pageNumber"));
+        Users u = this.userService.getUserByUsername(p.getName());
+        Map<String, Object> posts = this.postService.getPosts(u.getUserID(), pageNumber, isProfile);
+        return ResponseEntity.ok(posts);
     }
 
     @DeleteMapping("/post/{postID}")
@@ -129,7 +123,7 @@ public class ApiPostController {
 
         Posts p = new Posts();
         p.setContent((String) params.get("content"));
-        p.setPostType((String) params.get("postType"));
+        p.setPostType(postType);
         p.setCreatedAt(new Date());
         p.setUpdatedAt(new Date());
 
@@ -137,7 +131,7 @@ public class ApiPostController {
         Users user = userService.getUserByUsername(username);
         p.setUserID(user);
 
-        if (null == postType) {
+        if (postType == null) {
             return ResponseEntity.badRequest().body("Invalid post type");
         } else {
             Surveys survey = new Surveys();
@@ -157,10 +151,10 @@ public class ApiPostController {
                     listOption.add(option);
                 }
             }
+
             this.postService.createInvitationPost(p, survey, listOption);
             return ResponseEntity.ok("Post created successfully");
         }
-
     }
 
     @PatchMapping(path = "/posts/{id}", consumes = {MediaType.APPLICATION_JSON_VALUE})
@@ -177,9 +171,7 @@ public class ApiPostController {
             }
 
             Boolean isCommentLocked = Boolean.parseBoolean(params.get("isCommentLocked"));
-            
-            
-            
+
             if (isCommentLocked != null) {
                 p.setIsCommentLocked(isCommentLocked);
             }
@@ -192,9 +184,8 @@ public class ApiPostController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized to update this post");
     }
-    
-      @GetMapping(path = "/posts/{surveyID}/stats_survey/", consumes = {
-        MediaType.APPLICATION_JSON_VALUE})
+
+    @GetMapping(path = "/posts/{surveyID}/stats_survey/")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<List<Map<String, Object>>> getStatsSurvey(@PathVariable(value = "surveyID") int surveyID, Principal p) {
         List<Map<String, Object>> data = this.statsService.statsSurveyResponses(surveyID);

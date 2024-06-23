@@ -13,6 +13,7 @@ import com.nms.services.CommentService;
 import com.nms.services.PostService;
 import com.nms.services.StatsService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,7 +30,7 @@ public class CommentServiceImpl implements CommentService{
     private CommentRepository commentRepo;
 
     @Override
-    public List<Object[]> getCommentsByPostId(int id) {
+    public List<Map<String, Object>> getCommentsByPostId(int id) {
         return this.commentRepo.getCommentsByPostId(id);
     }
 

@@ -4,6 +4,7 @@
  */
 package com.nms.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -55,6 +56,7 @@ public class Usergroups implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
     @OneToMany(mappedBy = "usergroups", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Groupmembers> groupmembersSet;
 
     public Usergroups() {

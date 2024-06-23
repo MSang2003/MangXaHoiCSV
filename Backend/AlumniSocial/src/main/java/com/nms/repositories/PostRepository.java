@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface PostRepository {
 
-    List<Map<String, Object>> getPosts(Integer userID, Integer pageNumber);
+    Map<String, Object> getPosts(Integer userID, Integer pageNumber,Boolean isProfile);
 
     void deletePostById(int id);
 

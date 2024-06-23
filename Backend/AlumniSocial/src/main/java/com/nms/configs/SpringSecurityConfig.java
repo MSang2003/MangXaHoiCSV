@@ -6,6 +6,8 @@ package com.nms.configs;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -84,27 +86,32 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         "secure", true));
         return cloudinary;
     }
-    
+
     @Bean
-    public JavaMailSender getJavaMailSend(){
+    public JavaMailSender getJavaMailSend() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        
+
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
         mailSender.setUsername("msang.nms@gmail.com");
         mailSender.setPassword("gfsi yjbi cavj mrmj");
-        
+
         Properties javaMailProperties = new Properties();
-        
+
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
         javaMailProperties.put("mail.smtp.auth", "true");
         javaMailProperties.put("mail.transport.protocol", "smtp");
         javaMailProperties.put("mail.debug", "true");
-        
+
         mailSender.setJavaMailProperties(javaMailProperties);
-        
+
         return mailSender;
     }
-    
+
+    @Bean
+    public SimpleDateFormat dateFormat() {
+        SimpleDateFormat dateFormat  = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        return dateFormat;
+    }
 
 }
