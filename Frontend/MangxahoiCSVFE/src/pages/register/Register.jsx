@@ -110,6 +110,16 @@ const Register = () => {
         }
     };
 
+
+//     const SignUpFB= async()=>{
+// // const userCredential = await createUserWithEmailAndPassword(auth, "msang.nms@gmail.com", "msang.nms@gmail.com");
+
+//     const userCredential = await signInWithEmailAndPassword(auth, "msang.nms@gmail.com", "msang.nms@gmail.com");
+//     console.log(userCredential.user)
+//     }
+
+
+
     return (
         <div className="register">
             <div className="card">

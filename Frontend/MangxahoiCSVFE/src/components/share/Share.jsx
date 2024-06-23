@@ -13,12 +13,12 @@ const Share = () => {
   const currentUser = useSelector((state) => state.user.user);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
-  const [postType, setPostType] = useState("Status");
+  const [postType, setPostType] = useState("Status"); // Initialize postType as "Status"
   const [surveyContent, setSurveyContent] = useState("");
   const [surveyOptions, setSurveyOptions] = useState(["", ""]); // Start with two empty options
   const [isPollModalOpen, setIsPollModalOpen] = useState(false);
   const dispatch = useDispatch();
-  
+
   const handleAddOption = () => {
     setSurveyOptions([...surveyOptions, ""]);
   };
@@ -28,43 +28,62 @@ const Share = () => {
     newOptions[index] = value;
     setSurveyOptions(newOptions);
   };
- 
 
   const handleSubmit = async (e) => {
-    console.log(file)
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("content", postType === "Survey" ? surveyContent : content);
-    formData.append("userID", currentUser.userID);
-    formData.append("postType", postType);
-
-    if (file) {
-      formData.append("file", file);
-    }
-
-    if (postType === "Survey") {
-      formData.append("surveyOptions", JSON.stringify(surveyOptions));
-    }
-
     try {
-      await authApi().post(endpoints['posts'], formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `${cookie.load('token')}`
+      if (postType === "Survey") {
+        const data = {
+          userID: currentUser.userID,
+          postType: postType,
+          content: surveyContent,
+          question: surveyContent,
+          surveyOptions: surveyOptions,
+        };
+
+        await authApi().post(endpoints['survey'], data, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${cookie.load('token')}`
+          }
+        });
+
+        console.log("Survey created successfully");
+        setSurveyContent("");
+        setSurveyOptions(["", ""]);
+      } else {
+        let formData = new FormData();
+        formData.append("postType", postType);
+        formData.append("content", content);
+        formData.append("userID", currentUser.userID);
+
+        if (file) {
+          formData.append("file", file);
         }
-      });
-      setContent("");
-      setFile(null);
-      setSurveyContent("");
-      setSurveyOptions(["", ""]);
-      setIsPollModalOpen(false);
+
+        await authApi().post(endpoints['posts'], formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `${cookie.load('token')}`
+          }
+        });
+
+        console.log("Post created successfully");
+        setContent("");
+        setFile(null);
+      }
     } catch (error) {
       console.error("Failed to share post", error);
+    } finally {
+      // Reset postType to "Status" after handling the post
+      setPostType("Status");
+      setIsPollModalOpen(false);
     }
   };
 
   const openPollModal = () => {
+    setPostType("Survey"); // Set postType to "Survey" when opening the poll modal
     setIsPollModalOpen(true);
   };
 
@@ -113,10 +132,7 @@ const Share = () => {
             </div>
           </div>
           <div className="right">
-            <select value={postType} onChange={(e) => setPostType(e.target.value)}>
-              <option value="Status">Status</option>
-              <option value="Invitation">Invitation</option>
-            </select>
+            {/* Remove select dropdown for postType */}
             <button type="submit">Share</button>
           </div>
         </form>

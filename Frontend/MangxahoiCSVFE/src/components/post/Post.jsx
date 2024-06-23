@@ -16,14 +16,15 @@ const Post = ({ post }) => {
   const currentUser = useSelector((state) => state.user.user);
   const [commentOpen, setCommentOpen] = useState(false);
   const [reaction, setReaction] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showReactions, setShowReactions] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [loveCount, setLoveCount] = useState(post.loveCount);
+  const [hahaCount, setHahaCount] = useState(post.hahaCount);
 
   useEffect(() => {
     // Load the current reaction for the post if it exists
     const loadReaction = async () => {
       try {
-        const res = await authApi().get(endpoints['reactions'], {
+        const res = await authApi().get(endpoints['reactions'](post.postID), {
           headers: {
             'Authorization': `${cookie.load('token')}`
           }
@@ -34,45 +35,49 @@ const Post = ({ post }) => {
       }
     };
     loadReaction();
-  }, [post.postID]);
+  }, [post.postID]);  
 
   const handleReaction = async (reactionType) => {
     try {
       if (reaction === reactionType) {
-        await authApi().delete(endpoints['reactions'], {
+        await authApi().delete(endpoints['reactions'](post.postID), {
           headers: {
             'Authorization': `${cookie.load('token')}`
           }
         });
         setReaction(null);
+        // Update the count
+        if (reactionType === "Like") setLikeCount(likeCount - 1);
+        if (reactionType === "Love") setLoveCount(loveCount - 1);
+        if (reactionType === "Haha") setHahaCount(hahaCount - 1);
       } else {
-        await authApi().post(endpoints['reactions'], { type: reactionType }, {
+        await authApi().post(endpoints['reactions'](post.postID), { type: reactionType }, {
           headers: {
             'Authorization': `${cookie.load('token')}`
           }
         });
         setReaction(reactionType);
+        // Update the count
+        if (reactionType === "Like") setLikeCount(likeCount + 1);
+        if (reactionType === "Love") setLoveCount(loveCount + 1);
+        if (reactionType === "Haha") setHahaCount(hahaCount + 1);
       }
     } catch (error) {
       console.error("Failed to update reaction", error);
     }
   };
 
-  const renderReactionIcon = () => {
-    switch (reaction) {
+  const renderReactionIcon = (reactionType) => {
+    switch (reactionType) {
       case "Like":
-        return <ThumbUpIcon style={{ color: "blue" }} />;
+        return <ThumbUpIcon style={{ color: reaction === "Like" ? "blue" : "inherit" }} />;
       case "Love":
-        return <FavoriteIcon style={{ color: "red" }} />;
+        return <FavoriteIcon style={{ color: reaction === "Love" ? "red" : "inherit" }} />;
       case "Haha":
-        return <SentimentVerySatisfiedIcon style={{ color: "orange" }} />;
+        return <SentimentVerySatisfiedIcon style={{ color: reaction === "Haha" ? "orange" : "inherit" }} />;
       default:
-        return <ThumbUpIcon />;
+        return null;
     }
-  };
-
-  const handleOptionSelect = (option) => {
-    setSelectedOption(prevOption => prevOption === option ? null : option);
   };
 
   const handleLockComments = async () => {
@@ -105,15 +110,11 @@ const Post = ({ post }) => {
         <div className="survey">
           <div className="poll">
             <h3 className="poll__title">{post.content}</h3>
+            <p className="poll__question">{post.question}</p> {/* Display the survey question */}
             <div className="poll__options">
               {surveyOptions.map((option, index) => (
                 <div className="poll__option" key={index}>
-                  <button
-                    className={selectedOption === option ? "active" : ""}
-                    onClick={() => handleOptionSelect(option)}
-                  >
-                    {option}
-                  </button>
+                  {option}
                 </div>
               ))}
             </div>
@@ -150,21 +151,17 @@ const Post = ({ post }) => {
         </div>
         {renderPostContent()}
         <div className="info">
-          <div
-            className="item reaction-item"
-            onClick={() => handleReaction("Like")}
-            onMouseEnter={() => setShowReactions(true)}
-            onMouseLeave={() => setShowReactions(false)}
-          >
-            {renderReactionIcon()}
-            {post.reactionCount}
-            {showReactions && (
-              <div className="reaction-menu">
-                <ThumbUpIcon onClick={() => handleReaction("Like")} style={{ color: reaction === "Like" ? "blue" : "inherit" }} />
-                <FavoriteIcon onClick={() => handleReaction("Love")} style={{ color: reaction === "Love" ? "red" : "inherit" }} />
-                <SentimentVerySatisfiedIcon onClick={() => handleReaction("Haha")} style={{ color: reaction === "Haha" ? "orange" : "inherit" }} />
-              </div>
-            )}
+          <div className="reaction-item" onClick={() => handleReaction("Like")}>
+            {renderReactionIcon("Like")}
+            <span>{likeCount}</span>
+          </div>
+          <div className="reaction-item" onClick={() => handleReaction("Love")}>
+            {renderReactionIcon("Love")}
+            <span>{loveCount}</span>
+          </div>
+          <div className="reaction-item" onClick={() => handleReaction("Haha")}>
+            {renderReactionIcon("Haha")}
+            <span>{hahaCount}</span>
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
